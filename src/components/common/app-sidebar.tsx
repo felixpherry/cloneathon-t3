@@ -31,7 +31,7 @@ export default function AppSidebar() {
           <div className='relative border-b-border border-b'>
             <Search className='absolute left-2 top-1/2 -translate-y-1/2 size-4.5' />
             <Input
-              className='border-none focus-visible:border-none focus-visible:outline-none focus-visible:shadow-none pl-9.5'
+              className='border-none focus-visible:ring-0 pl-9.5'
               placeholder='Search your threads...'
             />
           </div>

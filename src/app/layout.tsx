@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import AppSidebar from '@/components/common/app-sidebar';
+import MessageInput from '@/components/message-input';
+import MaxWidthWrapper from '@/components/max-width-wrapper';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -31,10 +33,13 @@ export default function RootLayout({
       >
         <SidebarProvider className='relative'>
           <AppSidebar />
-          <div className='absolute left-4 top-4 z-10'>
-            <SidebarTrigger />
-          </div>
-          {children}
+          <SidebarTrigger className='fixed left-4 top-4 z-10' />
+          <main className='relative grow-1 px-2 overflow-auto overscroll-none min-h-svh max-h-svh'>
+            <MaxWidthWrapper className='flex flex-col justify-between h-full'>
+              {children}
+              <MessageInput className='sticky mx-auto bottom-0 w-full' />
+            </MaxWidthWrapper>
+          </main>
         </SidebarProvider>
       </body>
     </html>
