@@ -1,5 +1,5 @@
-import QuickActionsPanel from '@/components/quick-actions-panel';
+import QuickPromptsPanel from '@/components/quick-prompts-panel';
 
 export default function Home() {
-  return <QuickActionsPanel />;
+  return <QuickPromptsPanel />;
 }

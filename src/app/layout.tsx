@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import AppSidebar from '@/components/common/app-sidebar';
-import MessageInput from '@/components/message-input';
+import PromptInput from '@/components/prompt-input';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
+import Providers from '@/components/providers';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -31,16 +32,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SidebarProvider className='relative'>
+        <Providers>
           <AppSidebar />
           <SidebarTrigger className='fixed left-4 top-4 z-10' />
           <main className='grow-1 px-2 overflow-auto overscroll-none min-h-svh max-h-svh'>
-            <MaxWidthWrapper className='flex flex-col justify-between h-full'>
+            <MaxWidthWrapper className='flex flex-col h-full'>
               {children}
-              <MessageInput className='sticky mx-auto bottom-0 w-full' />
+              <PromptInput className='sticky mx-auto bottom-0 w-full mt-auto' />
             </MaxWidthWrapper>
           </main>
-        </SidebarProvider>
+        </Providers>
       </body>
     </html>
   );
