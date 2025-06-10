@@ -14,8 +14,12 @@ import { Search } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { requireUserId } from '@/lib/auth';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
-export default function AppSidebar() {
+export default async function AppSidebar() {
+  const user = await requireUserId();
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -24,7 +28,7 @@ export default function AppSidebar() {
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup className='gap-2'>
+        <SidebarGroup className='gap-2 top-0'>
           <Button className='font-semibold' asChild>
             <Link href='/'>New Chat</Link>
           </Button>
@@ -51,6 +55,25 @@ export default function AppSidebar() {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup className='sticky bg-sidebar bottom-4 mt-auto'>
+          <Link
+            href='/settings/subscription'
+            className='flex items-center gap-4 hover:bg-white p-2 hover:shadow-xs rounded'
+          >
+            <Avatar className='size-8.5'>
+              <AvatarImage
+                src={user.picture || '/images/avatar-fallback.png'}
+              />
+              <AvatarFallback>{user.given_name}</AvatarFallback>
+            </Avatar>
+            <div className='flex flex-col text-start gap-1'>
+              <p className='text-sm font-semibold'>
+                {user.given_name} {user.family_name}
+              </p>
+              <p className='text-muted-foreground text-xs'>Free</p>
+            </div>
+          </Link>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
