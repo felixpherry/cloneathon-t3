@@ -34,7 +34,7 @@ export default function RootLayout({
         <SidebarProvider className='relative'>
           <AppSidebar />
           <SidebarTrigger className='fixed left-4 top-4 z-10' />
-          <main className='relative grow-1 px-2 overflow-auto overscroll-none min-h-svh max-h-svh'>
+          <main className='grow-1 px-2 overflow-auto overscroll-none min-h-svh max-h-svh'>
             <MaxWidthWrapper className='flex flex-col justify-between h-full'>
               {children}
               <MessageInput className='sticky mx-auto bottom-0 w-full' />
