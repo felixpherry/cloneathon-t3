@@ -100,7 +100,7 @@ export default function QuickPromptsPanel() {
           animate={{
             opacity: 1,
           }}
-          className='py-40 flex flex-col gap-8'
+          className='my-auto flex flex-col gap-8'
         >
           <h2 className='font-semibold text-3xl text-center lg:text-left'>
             How can I help you?

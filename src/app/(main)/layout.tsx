@@ -13,9 +13,9 @@ export default async function Layout({ children }: React.PropsWithChildren) {
       <AppSidebar />
       <SidebarTrigger className='fixed left-4 top-4 z-10' />
       <main className='grow-1 px-2 overflow-auto overscroll-none min-h-svh max-h-svh'>
-        <MaxWidthWrapper className='flex flex-col h-full'>
+        <MaxWidthWrapper className='flex flex-col h-full justify-end'>
           {children}
-          <PromptInput className='sticky mx-auto bottom-0 w-full mt-auto' />
+          <PromptInput className='sticky bottom-0 w-full' />
         </MaxWidthWrapper>
       </main>
     </Providers>
