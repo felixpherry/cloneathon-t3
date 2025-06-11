@@ -7,7 +7,7 @@ import { ArrowUp, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
 import { usePromptInput } from './prompt-input-provider';
 
-type Props = React.ComponentProps<'div'>;
+type Props = React.ComponentProps<'form'>;
 export default function PromptInput({ className, ...props }: Props) {
   const { prompt, setPrompt } = usePromptInput();
   const promptInputRef = React.useRef<null | HTMLInputElement>(null);
@@ -22,7 +22,7 @@ export default function PromptInput({ className, ...props }: Props) {
   }, []);
 
   return (
-    <div
+    <form
       className={cn(className, 'bg-sidebar p-2 pb-0 rounded-t-2xl shadow-sm')}
       {...props}
     >
@@ -43,6 +43,6 @@ export default function PromptInput({ className, ...props }: Props) {
           </Button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }

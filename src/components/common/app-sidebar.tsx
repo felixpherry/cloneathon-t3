@@ -14,12 +14,11 @@ import { Search } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { requireUserId } from '@/lib/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { caller } from '@/trpc/server';
 
 export default async function AppSidebar() {
-  const user = await requireUserId();
-
+  const { user } = await caller.getUser();
   return (
     <Sidebar>
       <SidebarHeader>
@@ -63,13 +62,13 @@ export default async function AppSidebar() {
           >
             <Avatar className='size-8.5'>
               <AvatarImage
-                src={user.picture || '/images/avatar-fallback.png'}
+                src={user?.imageUrl || '/images/avatar-fallback.png'}
               />
-              <AvatarFallback>{user.given_name}</AvatarFallback>
+              <AvatarFallback>{user?.name}</AvatarFallback>
             </Avatar>
             <div className='flex flex-col text-start gap-1'>
               <p className='text-sm font-semibold'>
-                {user.given_name} {user.family_name}
+                {user?.username || user?.name}
               </p>
               <p className='text-muted-foreground text-xs'>Free</p>
             </div>

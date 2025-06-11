@@ -3,10 +3,26 @@ import MaxWidthWrapper from '@/components/max-width-wrapper';
 import PromptInput from '@/components/prompt-input';
 import Providers from '@/components/providers';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { requireUserId } from '@/lib/auth';
+import prisma from '@/lib/prisma';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { redirect } from 'next/navigation';
 
 export default async function Layout({ children }: React.PropsWithChildren) {
-  await requireUserId();
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+  if (!user) {
+    return redirect('/auth-callback');
+  }
+
+  const dbUser = await prisma.user.findUnique({
+    where: {
+      id: user.id,
+    },
+  });
+
+  if (!dbUser) {
+    return redirect('/auth-callback');
+  }
 
   return (
     <Providers>
