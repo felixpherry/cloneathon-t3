@@ -5,30 +5,34 @@ import { Input } from './ui/input';
 import { cn } from '@/lib/utils';
 import { ArrowUp, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
-import { usePromptInput } from './prompt-input-provider';
 
-type Props = React.ComponentProps<'form'>;
-export default function PromptInput({ className, ...props }: Props) {
-  const { prompt, setPrompt } = usePromptInput();
-  const promptInputRef = React.useRef<null | HTMLInputElement>(null);
-  React.useEffect(() => {
-    if (!!prompt) {
-      promptInputRef.current?.focus();
-    }
-  }, [prompt]);
+interface Props {
+  className: string;
+  prompt: string;
+  setPrompt: React.Dispatch<React.SetStateAction<string>>;
+  inputRef?: React.RefObject<null | HTMLInputElement>;
+  handleSubmit: () => void;
+}
 
-  React.useEffect(() => {
-    promptInputRef.current?.focus();
-  }, []);
-
+export default function PromptInput({
+  prompt,
+  setPrompt,
+  className,
+  handleSubmit,
+  inputRef,
+}: Props) {
   return (
     <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!prompt) return;
+        handleSubmit();
+      }}
       className={cn(className, 'bg-sidebar p-2 pb-0 rounded-t-2xl shadow-sm')}
-      {...props}
     >
       <div className='bg-white p-2 rounded-t-xl flex flex-col gap-8 shadow-sm'>
         <Input
-          ref={promptInputRef}
+          ref={inputRef}
           className='border-none focus-visible:ring-0 md:text-md'
           placeholder='Type your message here...'
           value={prompt}
@@ -38,7 +42,7 @@ export default function PromptInput({ className, ...props }: Props) {
           <Button className='rounded-full' size='icon' variant='outline'>
             <Paperclip className='size-4' />
           </Button>
-          <Button className='ml-auto' size='icon'>
+          <Button disabled={!prompt} className='ml-auto' size='icon'>
             <ArrowUp />
           </Button>
         </div>

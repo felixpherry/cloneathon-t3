@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import {
   Sidebar,
@@ -10,15 +12,25 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '../ui/sidebar';
-import { Search } from 'lucide-react';
+import { Loader2, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { caller } from '@/trpc/server';
+import { useTRPC } from '@/trpc/client';
+import { useMutationState, useQuery } from '@tanstack/react-query';
 
-export default async function AppSidebar() {
-  const { user } = await caller.getUser();
+export default function AppSidebar() {
+  const trpc = useTRPC();
+  const { data: user } = useQuery(trpc.getUser.queryOptions());
+  const { data: threads } = useQuery(trpc.getThreads.queryOptions());
+
+  const pendingThreads = useMutationState({
+    filters: { mutationKey: trpc.sendMessage.mutationKey(), status: 'pending' },
+    select: (mutation) =>
+      mutation.state.variables as { threadId: string; content: string },
+  });
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -40,15 +52,26 @@ export default async function AppSidebar() {
           </div>
         </SidebarGroup>
         <SidebarGroup>
+          {/* Todo: grouping by date */}
           <SidebarGroupLabel>Today</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              {pendingThreads.map((thread) => (
+                <SidebarMenuItem key={thread.threadId}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <span>{item.title}</span>
-                    </a>
+                    <Link href={`/threads/${thread.threadId}`}>
+                      <span>New Thread</span>
+                      <Loader2 className='size-4 ml-auto animate-spin' />
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+              {threads?.map((thread, idx) => (
+                <SidebarMenuItem key={thread.id}>
+                  <SidebarMenuButton asChild>
+                    <Link href={`/threads/${thread.id}`}>
+                      <span>{thread.title || `New Thread ${idx + 1}`}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -78,27 +101,3 @@ export default async function AppSidebar() {
     </Sidebar>
   );
 }
-
-// Menu items.
-const items = [
-  {
-    title: 'Home',
-    url: '#',
-  },
-  {
-    title: 'Inbox',
-    url: '#',
-  },
-  {
-    title: 'Calendar',
-    url: '#',
-  },
-  {
-    title: 'Search',
-    url: '#',
-  },
-  {
-    title: 'Settings',
-    url: '#',
-  },
-];

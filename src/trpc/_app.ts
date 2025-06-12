@@ -1,4 +1,4 @@
-// import { z } from 'zod';
+import { z } from 'zod';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { baseProcedure, createTRPCRouter, privateProcedure } from './init';
 import { TRPCError } from '@trpc/server';
@@ -23,7 +23,7 @@ export const appRouter = createTRPCRouter({
     return await prisma.user.create({
       data: {
         id: user.id,
-        name: [user.given_name, user.family_name].filter(Boolean).join(''),
+        name: `${user.given_name ?? ''} ${user.family_name ?? ''}`.trim(),
         email: user.email,
         imageUrl: user.picture,
       },
@@ -36,8 +36,63 @@ export const appRouter = createTRPCRouter({
         id: user.id,
       },
     });
-    return { user: dbUser };
+    return dbUser;
   }),
+  // todo: infinite query
+  getThreads: privateProcedure.query(async ({ ctx }) => {
+    const { user } = ctx;
+    return await prisma.thread.findMany({
+      where: {
+        userId: user.id,
+      },
+    });
+  }),
+  sendMessage: privateProcedure
+    .input(
+      z.object({
+        content: z.string(),
+        threadId: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { user } = ctx;
+      const { content, threadId } = input;
+      const thread = await prisma.thread.findUnique({
+        where: {
+          id: threadId,
+        },
+      });
+
+      if (!thread) {
+        return await prisma.thread.create({
+          data: {
+            id: threadId,
+            userId: user.id,
+            title: 'New Thread',
+            messages: {
+              create: {
+                content,
+                userId: user.id,
+              },
+            },
+          },
+        });
+      }
+
+      return await prisma.thread.update({
+        where: {
+          id: threadId,
+        },
+        data: {
+          messages: {
+            create: {
+              content,
+              userId: user.id,
+            },
+          },
+        },
+      });
+    }),
 });
 
 export type AppRouter = typeof appRouter;

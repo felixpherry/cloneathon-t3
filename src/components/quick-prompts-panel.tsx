@@ -3,7 +3,6 @@
 import { Code, GraduationCap, Telescope, WandSparkles } from 'lucide-react';
 import React from 'react';
 import { Button } from './ui/button';
-import { usePromptInput } from './prompt-input-provider';
 import { AnimatePresence, motion } from 'motion/react';
 
 type QuickPrompt = {
@@ -75,7 +74,13 @@ export const categoryToQuickPromptsMap: QuickPromptsByCategory = {
   ],
 };
 
-export default function QuickPromptsPanel() {
+export default function QuickPromptsPanel({
+  isVisible,
+  setPrompt,
+}: {
+  isVisible: boolean;
+  setPrompt: (prompt: string) => void;
+}) {
   const [selectedCategory, setSelectedCategory] = React.useState<null | string>(
     null
   );
@@ -89,11 +94,9 @@ export default function QuickPromptsPanel() {
       ? defaultQuickPrompts
       : categoryToQuickPromptsMap[selectedCategory];
 
-  const { prompt, setPrompt } = usePromptInput();
-
   return (
     <AnimatePresence>
-      {!prompt ? (
+      {isVisible ? (
         <motion.div
           initial={{ opacity: 0 }}
           exit={{ opacity: 0 }}
