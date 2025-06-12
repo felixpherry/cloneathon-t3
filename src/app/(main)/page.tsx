@@ -22,12 +22,14 @@ export default function Home() {
   }, []);
 
   const trpc = useTRPC();
+
   const queryClient = useQueryClient();
-  const { mutate: sendMessage } = useMutation({
-    ...trpc.sendMessage.mutationOptions(),
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: trpc.getThreads.queryKey() }),
-  });
+  const { mutate: sendMessage } = useMutation(
+    trpc.sendMessage.mutationOptions({
+      onSettled: () =>
+        queryClient.invalidateQueries({ queryKey: trpc.getThreads.queryKey() }),
+    })
+  );
 
   const router = useRouter();
   const [isPending, startTransition] = React.useTransition();

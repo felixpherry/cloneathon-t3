@@ -12,13 +12,19 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '../ui/sidebar';
-import { Loader2, Search } from 'lucide-react';
+import { Loader2, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useTRPC } from '@/trpc/client';
-import { useMutationState, useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useMutationState,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import ConfirmationDialog from './confirmation-dialog';
 
 export default function AppSidebar() {
   const trpc = useTRPC();
@@ -30,6 +36,16 @@ export default function AppSidebar() {
     select: (mutation) =>
       mutation.state.variables as { threadId: string; content: string },
   });
+
+  const queryClient = useQueryClient();
+  const { mutate: deleteThread } = useMutation(
+    trpc.deleteThread.mutationOptions({
+      onSettled: () =>
+        queryClient.invalidateQueries({
+          queryKey: trpc.getThreads.queryKey(),
+        }),
+    })
+  );
 
   return (
     <Sidebar>
@@ -52,7 +68,7 @@ export default function AppSidebar() {
           </div>
         </SidebarGroup>
         <SidebarGroup>
-          {/* Todo: grouping by date */}
+          {/* TODO: grouping by date */}
           <SidebarGroupLabel>Today</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -66,11 +82,33 @@ export default function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              {threads?.map((thread, idx) => (
+              {threads?.map((thread) => (
+                // TODO: Extract as custom component
                 <SidebarMenuItem key={thread.id}>
                   <SidebarMenuButton asChild>
-                    <Link href={`/threads/${thread.id}`}>
-                      <span>{thread.title || `New Thread ${idx + 1}`}</span>
+                    <Link
+                      className='group/thread'
+                      href={`/threads/${thread.id}`}
+                    >
+                      <span>{thread.title}</span>
+                      <div className='group-hover/thread:flex hidden ml-auto items-center gap-2'>
+                        <ConfirmationDialog
+                          title='Delete Thread'
+                          description={`Are you sure you want to delete "${thread.title}"? This action cannot be undone.`}
+                          actionButtonProps={{
+                            children: 'Delete',
+                            onClick: () => {
+                              deleteThread({
+                                threadId: thread.id,
+                              });
+                            },
+                          }}
+                        >
+                          <Button size='icon' variant='link'>
+                            <X />
+                          </Button>
+                        </ConfirmationDialog>
+                      </div>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

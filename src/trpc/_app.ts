@@ -93,6 +93,22 @@ export const appRouter = createTRPCRouter({
         },
       });
     }),
+  deleteThread: privateProcedure
+    .input(
+      z.object({
+        threadId: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { user } = ctx;
+      const { threadId } = input;
+      return await prisma.thread.delete({
+        where: {
+          id: threadId,
+          userId: user.id,
+        },
+      });
+    }),
 });
 
 export type AppRouter = typeof appRouter;
