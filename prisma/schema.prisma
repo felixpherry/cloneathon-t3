@@ -34,6 +34,9 @@ model Thread {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Even though it's obvious (since id is unique), I have to define the uniqueness explicitly to use this as a cursor
+  @@unique([id, createdAt])
 }
 
 enum Role {

@@ -27,7 +27,9 @@ export default function Home() {
   const { mutate: sendMessage } = useMutation(
     trpc.sendMessage.mutationOptions({
       onSettled: () =>
-        queryClient.invalidateQueries({ queryKey: trpc.getThreads.queryKey() }),
+        queryClient.invalidateQueries({
+          queryKey: trpc.infiniteThreads.infiniteQueryKey(),
+        }),
     })
   );
 

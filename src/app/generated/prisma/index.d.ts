@@ -4622,6 +4622,7 @@ export namespace Prisma {
 
   export type ThreadWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    id_createdAt?: ThreadIdCreatedAtCompoundUniqueInput
     AND?: ThreadWhereInput | ThreadWhereInput[]
     OR?: ThreadWhereInput[]
     NOT?: ThreadWhereInput | ThreadWhereInput[]
@@ -4631,7 +4632,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Thread"> | Date | string
     messages?: MessageListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id">
+  }, "id" | "id_createdAt">
 
   export type ThreadOrderByWithAggregationInput = {
     id?: SortOrder
@@ -5073,6 +5074,11 @@ export namespace Prisma {
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
+  }
+
+  export type ThreadIdCreatedAtCompoundUniqueInput = {
+    id: string
+    createdAt: Date | string
   }
 
   export type ThreadCountOrderByAggregateInput = {

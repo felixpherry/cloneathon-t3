@@ -8,7 +8,9 @@ export default async function Prefetcher({
   const queryClient = getQueryClient();
 
   await Promise.all([
-    queryClient.prefetchQuery(trpc.getThreads.queryOptions()),
+    queryClient.prefetchInfiniteQuery(
+      trpc.infiniteThreads.infiniteQueryOptions({})
+    ),
     queryClient.prefetchQuery(trpc.getUser.queryOptions()),
   ]);
 

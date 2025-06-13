@@ -19,6 +19,7 @@ import { Input } from '../ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useTRPC } from '@/trpc/client';
 import {
+  useInfiniteQuery,
   useMutation,
   useMutationState,
   useQuery,
@@ -29,7 +30,15 @@ import ConfirmationDialog from './confirmation-dialog';
 export default function AppSidebar() {
   const trpc = useTRPC();
   const { data: user } = useQuery(trpc.getUser.queryOptions());
-  const { data: threads } = useQuery(trpc.getThreads.queryOptions());
+  const { data: threadsResponse } = useInfiniteQuery(
+    trpc.infiniteThreads.infiniteQueryOptions(
+      {},
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+      }
+    )
+  );
+  const threads = threadsResponse?.pages.flatMap(({ threads }) => threads);
 
   const pendingThreads = useMutationState({
     filters: { mutationKey: trpc.sendMessage.mutationKey(), status: 'pending' },
@@ -42,7 +51,7 @@ export default function AppSidebar() {
     trpc.deleteThread.mutationOptions({
       onSettled: () =>
         queryClient.invalidateQueries({
-          queryKey: trpc.getThreads.queryKey(),
+          queryKey: trpc.infiniteThreads.infiniteQueryKey(),
         }),
     })
   );

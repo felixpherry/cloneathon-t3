@@ -38,15 +38,50 @@ export const appRouter = createTRPCRouter({
     });
     return dbUser;
   }),
-  // todo: infinite query
-  getThreads: privateProcedure.query(async ({ ctx }) => {
-    const { user } = ctx;
-    return await prisma.thread.findMany({
-      where: {
-        userId: user.id,
-      },
-    });
-  }),
+  infiniteThreads: privateProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).default(30),
+        cursor: z
+          .object({
+            id: z.string(),
+            createdAt: z.string(),
+          })
+          .nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { user } = ctx;
+      const { cursor, limit } = input;
+      const threads = await prisma.thread.findMany({
+        where: {
+          userId: user.id,
+        },
+        take: limit + 1,
+        cursor: cursor
+          ? {
+              id_createdAt: cursor,
+            }
+          : undefined,
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      let nextCursor: undefined | typeof cursor = undefined;
+      if (threads.length > limit) {
+        const nextThread = threads.pop();
+        nextCursor = {
+          id: nextThread!.id,
+          createdAt: JSON.stringify(nextThread!.createdAt),
+        };
+      }
+
+      return {
+        threads,
+        nextCursor,
+      };
+    }),
   sendMessage: privateProcedure
     .input(
       z.object({
