@@ -32,7 +32,7 @@ export default async function Layout({ children }: React.PropsWithChildren) {
   // });
   // if (!threadsCount) {
   //   await prisma.thread.createMany({
-  //     data: range(1000).map((num) => ({
+  //     data: range(10).map((num) => ({
   //       title: `Untitled ${num + 1}`,
   //       userId: user.id,
   //     })),

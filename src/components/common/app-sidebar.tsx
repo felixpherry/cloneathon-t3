@@ -21,7 +21,6 @@ import { useTRPC } from '@/trpc/client';
 import {
   useInfiniteQuery,
   useMutation,
-  useMutationState,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
@@ -30,6 +29,10 @@ import useIntersectionObserver from '@/hooks/use-intersection-observer';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import useDebounce from '@/hooks/use-debounce';
+import { DateTime } from 'luxon';
+import { Thread } from '@/app/generated/prisma';
+
+type DateCategory = 'Today' | 'This week' | 'More than a week ago';
 
 export default function AppSidebar() {
   const [search, setSearch] = React.useState<string | undefined>();
@@ -52,13 +55,44 @@ export default function AppSidebar() {
       }
     )
   );
-  const threads = threadsResponse?.pages.flatMap(({ threads }) => threads);
+  const flattenThreads = threadsResponse?.pages.flatMap(
+    ({ threads }) => threads
+  );
+  const now = DateTime.now();
+  const startOfToday = now.startOf('day');
+  const startOfWeek = now.startOf('week');
+  const mapDateCategoryToThreads = flattenThreads?.reduce(
+    (acc, thread) => {
+      const created = DateTime.fromJSDate(thread.createdAt);
+      if (created >= startOfToday) {
+        return {
+          ...acc,
+          Today: [...acc.Today, thread],
+        };
+      } else if (created >= startOfWeek) {
+        return {
+          ...acc,
+          'This week': [...acc['This week'], thread],
+        };
+      } else {
+        return {
+          ...acc,
+          'More than a week ago': [...acc['More than a week ago'], thread],
+        };
+      }
+    },
+    {
+      Today: [],
+      'This week': [],
+      'More than a week ago': [],
+    } as Record<DateCategory, Thread[]>
+  );
 
-  const pendingThreads = useMutationState({
-    filters: { mutationKey: trpc.sendMessage.mutationKey(), status: 'pending' },
-    select: (mutation) =>
-      mutation.state.variables as { threadId: string; content: string },
-  });
+  // const pendingThreads = useMutationState({
+  //   filters: { mutationKey: trpc.sendMessage.mutationKey(), status: 'pending' },
+  //   select: (mutation) =>
+  //     mutation.state.variables as { threadId: string; content: string },
+  // });
 
   const queryClient = useQueryClient();
   const { mutate: deleteThread } = useMutation(
@@ -101,63 +135,63 @@ export default function AppSidebar() {
             />
           </div>
         </SidebarGroup>
-        <SidebarGroup>
-          {/* TODO: grouping by date */}
-          <SidebarGroupLabel>Today</SidebarGroupLabel>
-          <SidebarGroupContent className='relative'>
-            <SidebarMenu>
-              {pendingThreads.map((thread) => (
-                <SidebarMenuItem key={thread.threadId}>
-                  <SidebarMenuButton asChild>
-                    <Link href={`/threads/${thread.threadId}`}>
-                      <span>New Thread</span>
-                      <Loader2 className='size-4 ml-auto animate-spin' />
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-              {threads?.map((thread) => (
-                // TODO: Extract as custom component
-                <SidebarMenuItem key={thread.id}>
-                  <SidebarMenuButton asChild>
-                    <Link
-                      className={cn(
-                        'group/thread',
-                        pathname === `/threads/${thread.id}` &&
-                          'bg-sidebar-accent'
-                      )}
-                      href={`/threads/${thread.id}`}
-                    >
-                      <span>{thread.title}</span>
-                      <div className='group-hover/thread:flex hidden ml-auto items-center gap-2'>
-                        <ConfirmationDialog
-                          title='Delete Thread'
-                          description={`Are you sure you want to delete "${thread.title}"? This action cannot be undone.`}
-                          actionButtonProps={{
-                            children: 'Delete',
-                            onClick: () => {
-                              deleteThread({
-                                threadId: thread.id,
-                              });
-                            },
-                          }}
-                        >
-                          <Button size='icon' variant='link'>
-                            <X />
-                          </Button>
-                        </ConfirmationDialog>
-                      </div>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-              {(isFetchingNextPage || isLoading) && (
-                <Loader2 className='size-5 animate-spin mx-auto' />
-              )}
-              <div ref={intersectionTargetRef} className='absolute bottom-20' />
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {(['Today', 'This week', 'More than a week ago'] as const).map(
+          (accessorKey) => {
+            const threads = mapDateCategoryToThreads?.[accessorKey];
+            if (!threads || !threads.length) return null;
+            return (
+              <SidebarGroup key={accessorKey}>
+                <SidebarGroupLabel>{accessorKey}</SidebarGroupLabel>
+                <SidebarGroupContent className='relative'>
+                  <SidebarMenu>
+                    {mapDateCategoryToThreads?.[accessorKey].map((thread) => (
+                      // TODO: Extract as custom component
+                      <SidebarMenuItem key={thread.id}>
+                        <SidebarMenuButton asChild>
+                          <Link
+                            className={cn(
+                              'group/thread',
+                              pathname === `/threads/${thread.id}` &&
+                                'bg-sidebar-accent'
+                            )}
+                            href={`/threads/${thread.id}`}
+                          >
+                            <span>{thread.title}</span>
+                            <div className='group-hover/thread:flex hidden ml-auto items-center gap-2'>
+                              <ConfirmationDialog
+                                title='Delete Thread'
+                                description={`Are you sure you want to delete "${thread.title}"? This action cannot be undone.`}
+                                actionButtonProps={{
+                                  children: 'Delete',
+                                  onClick: () => {
+                                    deleteThread({
+                                      threadId: thread.id,
+                                    });
+                                  },
+                                }}
+                              >
+                                <Button size='icon' variant='link'>
+                                  <X />
+                                </Button>
+                              </ConfirmationDialog>
+                            </div>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                    {(isFetchingNextPage || isLoading) && (
+                      <Loader2 className='size-5 animate-spin mx-auto' />
+                    )}
+                    <div
+                      ref={intersectionTargetRef}
+                      className='absolute bottom-20'
+                    />
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            );
+          }
+        )}
         <SidebarGroup className='sticky bg-sidebar pb-4 bottom-0 mt-auto'>
           <Link
             href='/settings/subscription'
