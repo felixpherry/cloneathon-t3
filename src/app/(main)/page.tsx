@@ -17,10 +17,6 @@ export default function Home() {
     inputRef.current?.focus();
   }
 
-  React.useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
   const trpc = useTRPC();
 
   const queryClient = useQueryClient();

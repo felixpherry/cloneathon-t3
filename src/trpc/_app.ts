@@ -4,6 +4,7 @@ import { baseProcedure, createTRPCRouter, privateProcedure } from './init';
 import { TRPCError } from '@trpc/server';
 import prisma from '@/lib/prisma';
 
+// TODO: Refactor routers into separate files
 export const appRouter = createTRPCRouter({
   authCallback: baseProcedure.query(async () => {
     const { getUser } = getKindeServerSession();
@@ -72,7 +73,7 @@ export const appRouter = createTRPCRouter({
         },
       });
 
-      let nextCursor: undefined | typeof cursor = undefined;
+      let nextCursor: typeof cursor | undefined;
       if (threads.length > limit) {
         const nextThread = threads.pop();
         nextCursor = {
@@ -83,6 +84,50 @@ export const appRouter = createTRPCRouter({
 
       return {
         threads,
+        nextCursor,
+      };
+    }),
+  infiniteMessages: privateProcedure
+    .input(
+      z.object({
+        limit: z.number().default(15),
+        threadId: z.string(),
+        cursor: z
+          .object({
+            id: z.string(),
+            createdAt: z.date(),
+          })
+          .nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { user } = ctx;
+      const { limit, threadId, cursor } = input;
+      const messages = await prisma.message.findMany({
+        where: {
+          userId: user.id,
+          threadId,
+        },
+        cursor: cursor
+          ? {
+              id_createdAt: cursor,
+            }
+          : undefined,
+        take: limit + 1,
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      let nextCursor: typeof cursor | undefined;
+      if (messages.length > limit) {
+        const nextMessage = messages.pop();
+        nextCursor = {
+          id: nextMessage!.id,
+          createdAt: nextMessage!.createdAt,
+        };
+      }
+      return {
+        messages,
         nextCursor,
       };
     }),

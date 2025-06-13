@@ -45,7 +45,7 @@ export default async function Layout({ children }: React.PropsWithChildren) {
         <AppSidebar />
         <SidebarTrigger className='fixed left-4 top-4 z-10' />
         <main className='grow-1 px-2 overflow-auto overscroll-none min-h-svh max-h-svh'>
-          <MaxWidthWrapper className='flex flex-col h-full justify-end'>
+          <MaxWidthWrapper className='flex flex-col min-h-full justify-end'>
             {children}
           </MaxWidthWrapper>
         </main>

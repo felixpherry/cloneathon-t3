@@ -10,7 +10,7 @@ interface Props {
   className: string;
   prompt: string;
   setPrompt: React.Dispatch<React.SetStateAction<string>>;
-  inputRef?: React.RefObject<null | HTMLInputElement>;
+  inputRef: React.RefObject<null | HTMLInputElement>;
   handleSubmit: () => void;
 }
 
@@ -21,6 +21,9 @@ export default function PromptInput({
   handleSubmit,
   inputRef,
 }: Props) {
+  React.useEffect(() => {
+    inputRef.current?.focus();
+  }, [inputRef]);
   return (
     <form
       onSubmit={(e) => {
