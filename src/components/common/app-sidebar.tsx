@@ -29,8 +29,11 @@ import ConfirmationDialog from './confirmation-dialog';
 import useIntersectionObserver from '@/hooks/use-intersection-observer';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import useDebounce from '@/hooks/use-debounce';
 
 export default function AppSidebar() {
+  const [search, setSearch] = React.useState<string | undefined>();
+  const debouncedSearch = useDebounce(search, 100);
   const trpc = useTRPC();
   const { data: user } = useQuery(trpc.getUser.queryOptions());
   const {
@@ -41,7 +44,9 @@ export default function AppSidebar() {
     hasNextPage,
   } = useInfiniteQuery(
     trpc.infiniteThreads.infiniteQueryOptions(
-      {},
+      {
+        search: debouncedSearch,
+      },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
       }
@@ -91,6 +96,8 @@ export default function AppSidebar() {
             <Input
               className='border-none focus-visible:ring-0 pl-9.5'
               placeholder='Search your threads...'
+              value={search ?? ''}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
         </SidebarGroup>

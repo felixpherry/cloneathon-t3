@@ -48,14 +48,18 @@ export const appRouter = createTRPCRouter({
             createdAt: z.date(),
           })
           .nullish(),
+        search: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { user } = ctx;
-      const { cursor, limit } = input;
+      const { cursor, limit, search } = input;
       const threads = await prisma.thread.findMany({
         where: {
           userId: user.id,
+          title: {
+            contains: search,
+          },
         },
         take: limit + 1,
         cursor: cursor
