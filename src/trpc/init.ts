@@ -1,3 +1,4 @@
+import superjson from 'superjson';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { initTRPC, TRPCError } from '@trpc/server';
 import React from 'react';
@@ -6,7 +7,9 @@ export const createTRPCContext = React.cache(async () => {
   return {};
 });
 
-const t = initTRPC.create({});
+const t = initTRPC.create({
+  transformer: superjson,
+});
 
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;

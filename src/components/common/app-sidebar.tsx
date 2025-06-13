@@ -26,11 +26,20 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import ConfirmationDialog from './confirmation-dialog';
+import useIntersectionObserver from '@/hooks/use-intersection-observer';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 export default function AppSidebar() {
   const trpc = useTRPC();
   const { data: user } = useQuery(trpc.getUser.queryOptions());
-  const { data: threadsResponse } = useInfiniteQuery(
+  const {
+    data: threadsResponse,
+    fetchNextPage,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(
     trpc.infiniteThreads.infiniteQueryOptions(
       {},
       {
@@ -56,6 +65,15 @@ export default function AppSidebar() {
     })
   );
 
+  // Gonna create a target element at the bottom of the list to observe with IntersectionObserver
+  const intersectionTargetRef = React.useRef<null | HTMLDivElement>(null);
+  useIntersectionObserver(
+    intersectionTargetRef,
+    () => hasNextPage && fetchNextPage()
+  );
+
+  const pathname = usePathname();
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -79,7 +97,7 @@ export default function AppSidebar() {
         <SidebarGroup>
           {/* TODO: grouping by date */}
           <SidebarGroupLabel>Today</SidebarGroupLabel>
-          <SidebarGroupContent>
+          <SidebarGroupContent className='relative'>
             <SidebarMenu>
               {pendingThreads.map((thread) => (
                 <SidebarMenuItem key={thread.threadId}>
@@ -96,7 +114,11 @@ export default function AppSidebar() {
                 <SidebarMenuItem key={thread.id}>
                   <SidebarMenuButton asChild>
                     <Link
-                      className='group/thread'
+                      className={cn(
+                        'group/thread',
+                        pathname === `/threads/${thread.id}` &&
+                          'bg-sidebar-accent'
+                      )}
                       href={`/threads/${thread.id}`}
                     >
                       <span>{thread.title}</span>
@@ -122,10 +144,14 @@ export default function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {(isFetchingNextPage || isLoading) && (
+                <Loader2 className='size-5 animate-spin mx-auto' />
+              )}
+              <div ref={intersectionTargetRef} className='absolute bottom-20' />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup className='sticky bg-sidebar bottom-4 mt-auto'>
+        <SidebarGroup className='sticky bg-sidebar pb-4 bottom-0 mt-auto'>
           <Link
             href='/settings/subscription'
             className='flex items-center gap-4 hover:bg-white p-2 hover:shadow-xs rounded'

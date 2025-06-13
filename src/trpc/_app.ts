@@ -45,7 +45,7 @@ export const appRouter = createTRPCRouter({
         cursor: z
           .object({
             id: z.string(),
-            createdAt: z.string(),
+            createdAt: z.date(),
           })
           .nullish(),
       })
@@ -73,7 +73,7 @@ export const appRouter = createTRPCRouter({
         const nextThread = threads.pop();
         nextCursor = {
           id: nextThread!.id,
-          createdAt: JSON.stringify(nextThread!.createdAt),
+          createdAt: nextThread!.createdAt,
         };
       }
 

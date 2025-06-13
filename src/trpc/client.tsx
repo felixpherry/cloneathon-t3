@@ -1,5 +1,6 @@
 'use client';
 
+import superjson from 'superjson';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AppRouter } from './_app';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
@@ -42,6 +43,7 @@ export function TRPCReactProvider(
               credentials: 'include',
             });
           },
+          transformer: superjson,
         }),
       ],
     })
