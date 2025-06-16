@@ -1,5 +1,6 @@
 'use client';
 
+import { produce } from 'immer';
 import React from 'react';
 import {
   Sidebar,
@@ -26,7 +27,7 @@ import {
 } from '@tanstack/react-query';
 import ConfirmationDialog from './confirmation-dialog';
 import useIntersectionObserver from '@/hooks/use-intersection-observer';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import useDebounce from '@/hooks/use-debounce';
 import { DateTime } from 'luxon';
@@ -55,6 +56,7 @@ export default function AppSidebar() {
       }
     )
   );
+  const queryKey = trpc.infiniteThreads.infiniteQueryKey({});
   const flattenThreads = threadsResponse?.pages.flatMap(
     ({ threads }) => threads
   );
@@ -88,19 +90,49 @@ export default function AppSidebar() {
     } as Record<DateCategory, Thread[]>
   );
 
-  // const pendingThreads = useMutationState({
-  //   filters: { mutationKey: trpc.sendMessage.mutationKey(), status: 'pending' },
-  //   select: (mutation) =>
-  //     mutation.state.variables as { threadId: string; content: string },
-  // });
-
   const queryClient = useQueryClient();
+  const params = useParams();
+  const router = useRouter();
   const { mutate: deleteThread } = useMutation(
     trpc.deleteThread.mutationOptions({
+      // Always refetch after error or successs
       onSettled: () =>
         queryClient.invalidateQueries({
-          queryKey: trpc.infiniteThreads.infiniteQueryKey(),
+          queryKey,
         }),
+      onMutate: async ({ threadId }) => {
+        // Cancel any refetches
+        await queryClient.cancelQueries({
+          queryKey,
+        });
+
+        // Snapshot the previous value
+        const previousThreads = queryClient.getQueryData(queryKey);
+
+        // Optimistically update the new value
+        queryClient.setQueryData(queryKey, (oldThreads) => {
+          const newThreads = produce(oldThreads!, (draftThreads) => {
+            const page = draftThreads.pages.find(({ threads }) =>
+              threads.some((thread) => thread.id === threadId)
+            );
+            if (!page) return;
+            page.threads = page.threads.filter(
+              (thread) => thread.id !== threadId
+            );
+          });
+          return newThreads;
+        });
+
+        if (params.threadId === threadId) {
+          router.push('/');
+        }
+        // Return snapshot value
+        return { previousThreads };
+      },
+      // If the mutation failed, roll back to the previous value
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(queryKey, context?.previousThreads);
+      },
     })
   );
 
@@ -163,7 +195,8 @@ export default function AppSidebar() {
                                 description={`Are you sure you want to delete "${thread.title}"? This action cannot be undone.`}
                                 actionButtonProps={{
                                   children: 'Delete',
-                                  onClick: () => {
+                                  onClick: (e) => {
+                                    e.stopPropagation();
                                     deleteThread({
                                       threadId: thread.id,
                                     });
