@@ -102,7 +102,7 @@ export default function AppSidebar() {
         }),
       onMutate: async ({ threadId }) => {
         // Cancel any refetches
-        await queryClient.cancelQueries({
+        queryClient.cancelQueries({
           queryKey,
         });
 
@@ -195,8 +195,7 @@ export default function AppSidebar() {
                                 description={`Are you sure you want to delete "${thread.title}"? This action cannot be undone.`}
                                 actionButtonProps={{
                                   children: 'Delete',
-                                  onClick: (e) => {
-                                    e.stopPropagation();
+                                  onClick: () => {
                                     deleteThread({
                                       threadId: thread.id,
                                     });

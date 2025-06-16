@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createId } from '@paralleldrive/cuid2';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { produce } from 'immer';
 
 export default function Home() {
   const [prompt, setPrompt] = React.useState('');
@@ -20,20 +21,86 @@ export default function Home() {
   const trpc = useTRPC();
 
   const queryClient = useQueryClient();
-  // const threadsQuerykey = trpc.infiniteThreads.infiniteQueryKey({});
+  const threadsQuerykey = trpc.infiniteThreads.infiniteQueryKey({});
+
   // There're 2 optimistic updates here:
-  // 1. Optimistic update the threads (I need to access the search value tho, I could use nuqs but it doesn't seem right. Context also doesn't seem right but whatever)
-  // 2. Optimistic update the message inside the thread.
+  // 1. Optimistic update the threads
+  // 2. Optimistic update the messages inside the thread.
   const { mutate: sendMessage } = useMutation(
     trpc.sendMessage.mutationOptions({
       onSettled: () =>
         queryClient.invalidateQueries({
-          queryKey: trpc.infiniteThreads.infiniteQueryKey(),
+          queryKey: threadsQuerykey,
         }),
-      onMutate: () => {
+      onMutate: ({ threadId, content }) => {
+        const messagesQuerykey = trpc.infiniteMessages.infiniteQueryKey({
+          threadId,
+        });
         // Threads
         // 1. Stop ongoing refetches
-        queryClient.cancelQueries();
+        queryClient.cancelQueries({ queryKey: threadsQuerykey });
+
+        // 2. Snapshot previous threads
+        const previousThreads = queryClient.getQueryData(threadsQuerykey);
+
+        // Optimistically update the new value
+        queryClient.setQueryData(threadsQuerykey, (oldThreads) => {
+          // I don't care if I break the "pagination". Since this is infinite scrolling, it has 0 effects
+          const newThreads = produce(oldThreads!, (draftThreads) => {
+            draftThreads.pageParams.push({
+              id: threadId,
+              createdAt: new Date(),
+            });
+
+            // Mock the optimistic data.
+            draftThreads.pages.push({
+              nextCursor: null,
+              threads: [
+                {
+                  createdAt: new Date(),
+                  id: threadId,
+                  title: 'New Thread',
+                  updatedAt: new Date(),
+                  userId: '',
+                },
+              ],
+            });
+          });
+          return newThreads;
+        });
+        queryClient.setQueryData(messagesQuerykey, () => {
+          const mockMessageId = crypto.randomUUID();
+          return {
+            pageParams: [
+              {
+                id: mockMessageId,
+                createdAt: new Date(),
+              },
+            ],
+            pages: [
+              {
+                nextCursor: null,
+                messages: [
+                  {
+                    id: mockMessageId,
+                    content,
+                    createdAt: new Date(),
+                    threadId,
+                    updatedAt: new Date(),
+                    attachmentUrl: null,
+                    userId: '',
+                  },
+                ],
+              },
+            ],
+          };
+        });
+        return {
+          previousThreads,
+        };
+      },
+      onError: (err, newMessage, context) => {
+        queryClient.setQueryData(threadsQuerykey, context?.previousThreads);
       },
     })
   );
