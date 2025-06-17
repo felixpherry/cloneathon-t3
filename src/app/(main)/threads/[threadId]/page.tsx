@@ -9,6 +9,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
+import { produce } from 'immer';
 import { Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React from 'react';
@@ -40,13 +41,48 @@ export default function Page() {
   const inputRef = React.useRef<null | HTMLInputElement>(null);
   const [prompt, setPrompt] = React.useState('');
   const queryClient = useQueryClient();
+  const queryKey = trpc.infiniteMessages.infiniteQueryKey({ threadId });
   const { mutate: sendMessage } = useMutation(
     trpc.sendMessage.mutationOptions({
       onSettled: () => {
         queryClient.invalidateQueries({
-          queryKey: trpc.infiniteMessages.infiniteQueryKey({ threadId }),
+          queryKey,
         });
         scrollChatToBottom();
+      },
+      onMutate: ({ content, threadId }) => {
+        // 1. Stop ongoing refetches
+        queryClient.cancelQueries({ queryKey });
+
+        // 2. Snapshot previous values
+        const prevMessages = queryClient.getQueryData(queryKey);
+
+        // 3. Optimistic update
+        queryClient.setQueryData(queryKey, (oldMessages) => {
+          const mockMessageId = crypto.randomUUID();
+          const newMessages = produce(oldMessages, (draftMessages) => {
+            // Mock the optimistic data
+            draftMessages?.pages.unshift({
+              messages: [
+                {
+                  id: mockMessageId,
+                  content,
+                  attachmentUrl: null,
+                  createdAt: new Date(),
+                  threadId,
+                  updatedAt: new Date(),
+                  userId: '',
+                },
+              ],
+              nextCursor: null,
+            });
+          });
+          return newMessages;
+        });
+        return { prevMessages };
+      },
+      onError: (error, newMessage, context) => {
+        queryClient.setQueryData(queryKey, context?.prevMessages);
       },
     })
   );

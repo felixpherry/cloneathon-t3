@@ -30,14 +30,12 @@ export default async function Layout({ children }: React.PropsWithChildren) {
   //     userId: user.id,
   //   },
   // });
-  // if (!threadsCount) {
-  //   await prisma.thread.createMany({
-  //     data: range(10).map((num) => ({
-  //       title: `Untitled ${num + 1}`,
-  //       userId: user.id,
-  //     })),
-  //   });
-  // }
+  // await prisma.thread.createMany({
+  //   data: range(100).map((num) => ({
+  //     title: `Untitled ${num + 1}`,
+  //     userId: user.id,
+  //   })),
+  // });
 
   return (
     <Prefetcher>

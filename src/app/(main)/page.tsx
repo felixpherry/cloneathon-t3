@@ -28,10 +28,17 @@ export default function Home() {
   // 2. Optimistic update the messages inside the thread.
   const { mutate: sendMessage } = useMutation(
     trpc.sendMessage.mutationOptions({
-      onSettled: () =>
+      onSettled: (newThread) => {
+        const messagesQueryKey = trpc.infiniteMessages.infiniteQueryKey({
+          threadId: newThread?.id,
+        });
         queryClient.invalidateQueries({
           queryKey: threadsQuerykey,
-        }),
+        });
+        queryClient.invalidateQueries({
+          queryKey: messagesQueryKey,
+        });
+      },
       onMutate: ({ threadId, content }) => {
         const messagesQuerykey = trpc.infiniteMessages.infiniteQueryKey({
           threadId,
@@ -45,15 +52,9 @@ export default function Home() {
 
         // Optimistically update the new value
         queryClient.setQueryData(threadsQuerykey, (oldThreads) => {
-          // I don't care if I break the "pagination". Since this is infinite scrolling, it has 0 effects
           const newThreads = produce(oldThreads!, (draftThreads) => {
-            draftThreads.pageParams.push({
-              id: threadId,
-              createdAt: new Date(),
-            });
-
             // Mock the optimistic data.
-            draftThreads.pages.push({
+            draftThreads.pages.unshift({
               nextCursor: null,
               threads: [
                 {
@@ -68,31 +69,27 @@ export default function Home() {
           });
           return newThreads;
         });
+
         queryClient.setQueryData(messagesQuerykey, () => {
           const mockMessageId = crypto.randomUUID();
           return {
-            pageParams: [
-              {
-                id: mockMessageId,
-                createdAt: new Date(),
-              },
-            ],
             pages: [
               {
-                nextCursor: null,
                 messages: [
                   {
                     id: mockMessageId,
                     content,
+                    attachmentUrl: null,
                     createdAt: new Date(),
                     threadId,
                     updatedAt: new Date(),
-                    attachmentUrl: null,
                     userId: '',
                   },
                 ],
+                nextCursor: null,
               },
             ],
+            pageParams: [],
           };
         });
         return {
