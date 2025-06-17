@@ -178,37 +178,37 @@ export default function AppSidebar() {
                   <SidebarMenu>
                     {mapDateCategoryToThreads?.[accessorKey].map((thread) => (
                       // TODO: Extract as custom component
-                      <SidebarMenuItem key={thread.id}>
+                      <SidebarMenuItem
+                        className={cn(
+                          'hover:bg-sidebar-accent rounded-md',
+                          pathname === `/threads/${thread.id}` &&
+                            'bg-sidebar-accent'
+                        )}
+                        key={thread.id}
+                      >
                         <SidebarMenuButton asChild>
-                          <Link
-                            className={cn(
-                              'group/thread',
-                              pathname === `/threads/${thread.id}` &&
-                                'bg-sidebar-accent'
-                            )}
-                            href={`/threads/${thread.id}`}
-                          >
+                          <Link href={`/threads/${thread.id}`}>
                             <span>{thread.title}</span>
-                            <div className='group-hover/thread:flex hidden ml-auto items-center gap-2'>
-                              <ConfirmationDialog
-                                title='Delete Thread'
-                                description={`Are you sure you want to delete "${thread.title}"? This action cannot be undone.`}
-                                actionButtonProps={{
-                                  children: 'Delete',
-                                  onClick: () => {
-                                    deleteThread({
-                                      threadId: thread.id,
-                                    });
-                                  },
-                                }}
-                              >
-                                <Button size='icon' variant='link'>
-                                  <X />
-                                </Button>
-                              </ConfirmationDialog>
-                            </div>
                           </Link>
                         </SidebarMenuButton>
+                        <div className='group-hover/menu-item:inline-flex items-center hidden absolute top-0 right-0 bottom-0 gap-2'>
+                          <ConfirmationDialog
+                            title='Delete Thread'
+                            description={`Are you sure you want to delete "${thread.title}"? This action cannot be undone.`}
+                            actionButtonProps={{
+                              children: 'Delete',
+                              onClick: () => {
+                                deleteThread({
+                                  threadId: thread.id,
+                                });
+                              },
+                            }}
+                          >
+                            <Button type='button' size='icon' variant='link'>
+                              <X />
+                            </Button>
+                          </ConfirmationDialog>
+                        </div>
                       </SidebarMenuItem>
                     ))}
                     {(isFetchingNextPage || isLoading) && (
