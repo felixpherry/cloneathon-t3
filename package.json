@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@kinde-oss/kinde-auth-nextjs": "^2.6.2",
+    "@openrouter/ai-sdk-provider": "^0.7.2",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^6.9.0",
     "@prisma/extension-accelerate": "^2.0.1",

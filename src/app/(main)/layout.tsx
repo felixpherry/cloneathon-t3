@@ -4,7 +4,6 @@ import Prefetcher from '@/components/prefetcher';
 import Providers from '@/components/providers';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import prisma from '@/lib/prisma';
-// import { range } from '@/lib/utils';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
 
