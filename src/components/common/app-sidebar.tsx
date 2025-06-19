@@ -13,10 +13,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '../ui/sidebar';
-import { Loader2, Search, X } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { Input } from '../ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useTRPC } from '@/trpc/client';
 import {
@@ -32,6 +31,7 @@ import { cn } from '@/lib/utils';
 import useDebounce from '@/hooks/use-debounce';
 import { DateTime } from 'luxon';
 import { Thread } from '@/app/generated/prisma';
+import SearchInput from './search-input';
 
 type DateCategory = 'Today' | 'This week' | 'More than a week ago';
 
@@ -157,15 +157,11 @@ export default function AppSidebar() {
           <Button className='font-semibold' asChild>
             <Link href='/'>New Chat</Link>
           </Button>
-          <div className='relative border-b-border border-b'>
-            <Search className='absolute left-2 top-1/2 -translate-y-1/2 size-4.5' />
-            <Input
-              className='border-none focus-visible:ring-0 pl-9.5'
-              placeholder='Search your threads...'
-              value={search ?? ''}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
+          <SearchInput
+            placeholder='Search your threads...'
+            value={search ?? ''}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </SidebarGroup>
         {(['Today', 'This week', 'More than a week ago'] as const).map(
           (accessorKey) => {

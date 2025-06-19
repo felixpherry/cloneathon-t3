@@ -28,6 +28,11 @@ export type Thread = $Result.DefaultSelection<Prisma.$ThreadPayload>
  * 
  */
 export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
+/**
+ * Model FavoriteModel
+ * 
+ */
+export type FavoriteModel = $Result.DefaultSelection<Prisma.$FavoriteModelPayload>
 
 /**
  * Enums
@@ -200,6 +205,16 @@ export class PrismaClient<
     * ```
     */
   get message(): Prisma.MessageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.favoriteModel`: Exposes CRUD operations for the **FavoriteModel** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FavoriteModels
+    * const favoriteModels = await prisma.favoriteModel.findMany()
+    * ```
+    */
+  get favoriteModel(): Prisma.FavoriteModelDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -642,7 +657,8 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Thread: 'Thread',
-    Message: 'Message'
+    Message: 'Message',
+    FavoriteModel: 'FavoriteModel'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -661,7 +677,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "thread" | "message"
+      modelProps: "user" | "thread" | "message" | "favoriteModel"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -887,6 +903,80 @@ export namespace Prisma {
           }
         }
       }
+      FavoriteModel: {
+        payload: Prisma.$FavoriteModelPayload<ExtArgs>
+        fields: Prisma.FavoriteModelFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FavoriteModelFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteModelPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FavoriteModelFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteModelPayload>
+          }
+          findFirst: {
+            args: Prisma.FavoriteModelFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteModelPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FavoriteModelFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteModelPayload>
+          }
+          findMany: {
+            args: Prisma.FavoriteModelFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteModelPayload>[]
+          }
+          create: {
+            args: Prisma.FavoriteModelCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteModelPayload>
+          }
+          createMany: {
+            args: Prisma.FavoriteModelCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FavoriteModelCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteModelPayload>[]
+          }
+          delete: {
+            args: Prisma.FavoriteModelDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteModelPayload>
+          }
+          update: {
+            args: Prisma.FavoriteModelUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteModelPayload>
+          }
+          deleteMany: {
+            args: Prisma.FavoriteModelDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FavoriteModelUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FavoriteModelUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteModelPayload>[]
+          }
+          upsert: {
+            args: Prisma.FavoriteModelUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteModelPayload>
+          }
+          aggregate: {
+            args: Prisma.FavoriteModelAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFavoriteModel>
+          }
+          groupBy: {
+            args: Prisma.FavoriteModelGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FavoriteModelGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FavoriteModelCountArgs<ExtArgs>
+            result: $Utils.Optional<FavoriteModelCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -974,6 +1064,7 @@ export namespace Prisma {
     user?: UserOmit
     thread?: ThreadOmit
     message?: MessageOmit
+    favoriteModel?: FavoriteModelOmit
   }
 
   /* Types for Logging */
@@ -1070,11 +1161,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     threads: number
     messages: number
+    favoriteModels: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     threads?: boolean | UserCountOutputTypeCountThreadsArgs
     messages?: boolean | UserCountOutputTypeCountMessagesArgs
+    favoriteModels?: boolean | UserCountOutputTypeCountFavoriteModelsArgs
   }
 
   // Custom InputTypes
@@ -1100,6 +1193,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MessageWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFavoriteModelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FavoriteModelWhereInput
   }
 
 
@@ -1320,6 +1420,7 @@ export namespace Prisma {
     updatedAt?: boolean
     threads?: boolean | User$threadsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
+    favoriteModels?: boolean | User$favoriteModelsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1357,6 +1458,7 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     threads?: boolean | User$threadsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
+    favoriteModels?: boolean | User$favoriteModelsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1367,6 +1469,7 @@ export namespace Prisma {
     objects: {
       threads: Prisma.$ThreadPayload<ExtArgs>[]
       messages: Prisma.$MessagePayload<ExtArgs>[]
+      favoriteModels: Prisma.$FavoriteModelPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1772,6 +1875,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     threads<T extends User$threadsArgs<ExtArgs> = {}>(args?: Subset<T, User$threadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     messages<T extends User$messagesArgs<ExtArgs> = {}>(args?: Subset<T, User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    favoriteModels<T extends User$favoriteModelsArgs<ExtArgs> = {}>(args?: Subset<T, User$favoriteModelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2239,6 +2343,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
+  }
+
+  /**
+   * User.favoriteModels
+   */
+  export type User$favoriteModelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelInclude<ExtArgs> | null
+    where?: FavoriteModelWhereInput
+    orderBy?: FavoriteModelOrderByWithRelationInput | FavoriteModelOrderByWithRelationInput[]
+    cursor?: FavoriteModelWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FavoriteModelScalarFieldEnum | FavoriteModelScalarFieldEnum[]
   }
 
   /**
@@ -4437,6 +4565,1062 @@ export namespace Prisma {
 
 
   /**
+   * Model FavoriteModel
+   */
+
+  export type AggregateFavoriteModel = {
+    _count: FavoriteModelCountAggregateOutputType | null
+    _min: FavoriteModelMinAggregateOutputType | null
+    _max: FavoriteModelMaxAggregateOutputType | null
+  }
+
+  export type FavoriteModelMinAggregateOutputType = {
+    id: string | null
+    modelId: string | null
+    userId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FavoriteModelMaxAggregateOutputType = {
+    id: string | null
+    modelId: string | null
+    userId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FavoriteModelCountAggregateOutputType = {
+    id: number
+    modelId: number
+    userId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FavoriteModelMinAggregateInputType = {
+    id?: true
+    modelId?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FavoriteModelMaxAggregateInputType = {
+    id?: true
+    modelId?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FavoriteModelCountAggregateInputType = {
+    id?: true
+    modelId?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FavoriteModelAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FavoriteModel to aggregate.
+     */
+    where?: FavoriteModelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FavoriteModels to fetch.
+     */
+    orderBy?: FavoriteModelOrderByWithRelationInput | FavoriteModelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FavoriteModelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FavoriteModels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FavoriteModels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FavoriteModels
+    **/
+    _count?: true | FavoriteModelCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FavoriteModelMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FavoriteModelMaxAggregateInputType
+  }
+
+  export type GetFavoriteModelAggregateType<T extends FavoriteModelAggregateArgs> = {
+        [P in keyof T & keyof AggregateFavoriteModel]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFavoriteModel[P]>
+      : GetScalarType<T[P], AggregateFavoriteModel[P]>
+  }
+
+
+
+
+  export type FavoriteModelGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FavoriteModelWhereInput
+    orderBy?: FavoriteModelOrderByWithAggregationInput | FavoriteModelOrderByWithAggregationInput[]
+    by: FavoriteModelScalarFieldEnum[] | FavoriteModelScalarFieldEnum
+    having?: FavoriteModelScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FavoriteModelCountAggregateInputType | true
+    _min?: FavoriteModelMinAggregateInputType
+    _max?: FavoriteModelMaxAggregateInputType
+  }
+
+  export type FavoriteModelGroupByOutputType = {
+    id: string
+    modelId: string
+    userId: string
+    createdAt: Date
+    updatedAt: Date
+    _count: FavoriteModelCountAggregateOutputType | null
+    _min: FavoriteModelMinAggregateOutputType | null
+    _max: FavoriteModelMaxAggregateOutputType | null
+  }
+
+  type GetFavoriteModelGroupByPayload<T extends FavoriteModelGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FavoriteModelGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FavoriteModelGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FavoriteModelGroupByOutputType[P]>
+            : GetScalarType<T[P], FavoriteModelGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FavoriteModelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    modelId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["favoriteModel"]>
+
+  export type FavoriteModelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    modelId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["favoriteModel"]>
+
+  export type FavoriteModelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    modelId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["favoriteModel"]>
+
+  export type FavoriteModelSelectScalar = {
+    id?: boolean
+    modelId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FavoriteModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "modelId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["favoriteModel"]>
+  export type FavoriteModelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FavoriteModelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FavoriteModelIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $FavoriteModelPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FavoriteModel"
+    objects: {
+      User: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      modelId: string
+      userId: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["favoriteModel"]>
+    composites: {}
+  }
+
+  type FavoriteModelGetPayload<S extends boolean | null | undefined | FavoriteModelDefaultArgs> = $Result.GetResult<Prisma.$FavoriteModelPayload, S>
+
+  type FavoriteModelCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FavoriteModelFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FavoriteModelCountAggregateInputType | true
+    }
+
+  export interface FavoriteModelDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FavoriteModel'], meta: { name: 'FavoriteModel' } }
+    /**
+     * Find zero or one FavoriteModel that matches the filter.
+     * @param {FavoriteModelFindUniqueArgs} args - Arguments to find a FavoriteModel
+     * @example
+     * // Get one FavoriteModel
+     * const favoriteModel = await prisma.favoriteModel.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FavoriteModelFindUniqueArgs>(args: SelectSubset<T, FavoriteModelFindUniqueArgs<ExtArgs>>): Prisma__FavoriteModelClient<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FavoriteModel that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FavoriteModelFindUniqueOrThrowArgs} args - Arguments to find a FavoriteModel
+     * @example
+     * // Get one FavoriteModel
+     * const favoriteModel = await prisma.favoriteModel.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FavoriteModelFindUniqueOrThrowArgs>(args: SelectSubset<T, FavoriteModelFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FavoriteModelClient<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FavoriteModel that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FavoriteModelFindFirstArgs} args - Arguments to find a FavoriteModel
+     * @example
+     * // Get one FavoriteModel
+     * const favoriteModel = await prisma.favoriteModel.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FavoriteModelFindFirstArgs>(args?: SelectSubset<T, FavoriteModelFindFirstArgs<ExtArgs>>): Prisma__FavoriteModelClient<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FavoriteModel that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FavoriteModelFindFirstOrThrowArgs} args - Arguments to find a FavoriteModel
+     * @example
+     * // Get one FavoriteModel
+     * const favoriteModel = await prisma.favoriteModel.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FavoriteModelFindFirstOrThrowArgs>(args?: SelectSubset<T, FavoriteModelFindFirstOrThrowArgs<ExtArgs>>): Prisma__FavoriteModelClient<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FavoriteModels that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FavoriteModelFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FavoriteModels
+     * const favoriteModels = await prisma.favoriteModel.findMany()
+     * 
+     * // Get first 10 FavoriteModels
+     * const favoriteModels = await prisma.favoriteModel.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const favoriteModelWithIdOnly = await prisma.favoriteModel.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FavoriteModelFindManyArgs>(args?: SelectSubset<T, FavoriteModelFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FavoriteModel.
+     * @param {FavoriteModelCreateArgs} args - Arguments to create a FavoriteModel.
+     * @example
+     * // Create one FavoriteModel
+     * const FavoriteModel = await prisma.favoriteModel.create({
+     *   data: {
+     *     // ... data to create a FavoriteModel
+     *   }
+     * })
+     * 
+     */
+    create<T extends FavoriteModelCreateArgs>(args: SelectSubset<T, FavoriteModelCreateArgs<ExtArgs>>): Prisma__FavoriteModelClient<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FavoriteModels.
+     * @param {FavoriteModelCreateManyArgs} args - Arguments to create many FavoriteModels.
+     * @example
+     * // Create many FavoriteModels
+     * const favoriteModel = await prisma.favoriteModel.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FavoriteModelCreateManyArgs>(args?: SelectSubset<T, FavoriteModelCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FavoriteModels and returns the data saved in the database.
+     * @param {FavoriteModelCreateManyAndReturnArgs} args - Arguments to create many FavoriteModels.
+     * @example
+     * // Create many FavoriteModels
+     * const favoriteModel = await prisma.favoriteModel.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FavoriteModels and only return the `id`
+     * const favoriteModelWithIdOnly = await prisma.favoriteModel.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FavoriteModelCreateManyAndReturnArgs>(args?: SelectSubset<T, FavoriteModelCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FavoriteModel.
+     * @param {FavoriteModelDeleteArgs} args - Arguments to delete one FavoriteModel.
+     * @example
+     * // Delete one FavoriteModel
+     * const FavoriteModel = await prisma.favoriteModel.delete({
+     *   where: {
+     *     // ... filter to delete one FavoriteModel
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FavoriteModelDeleteArgs>(args: SelectSubset<T, FavoriteModelDeleteArgs<ExtArgs>>): Prisma__FavoriteModelClient<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FavoriteModel.
+     * @param {FavoriteModelUpdateArgs} args - Arguments to update one FavoriteModel.
+     * @example
+     * // Update one FavoriteModel
+     * const favoriteModel = await prisma.favoriteModel.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FavoriteModelUpdateArgs>(args: SelectSubset<T, FavoriteModelUpdateArgs<ExtArgs>>): Prisma__FavoriteModelClient<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FavoriteModels.
+     * @param {FavoriteModelDeleteManyArgs} args - Arguments to filter FavoriteModels to delete.
+     * @example
+     * // Delete a few FavoriteModels
+     * const { count } = await prisma.favoriteModel.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FavoriteModelDeleteManyArgs>(args?: SelectSubset<T, FavoriteModelDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FavoriteModels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FavoriteModelUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FavoriteModels
+     * const favoriteModel = await prisma.favoriteModel.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FavoriteModelUpdateManyArgs>(args: SelectSubset<T, FavoriteModelUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FavoriteModels and returns the data updated in the database.
+     * @param {FavoriteModelUpdateManyAndReturnArgs} args - Arguments to update many FavoriteModels.
+     * @example
+     * // Update many FavoriteModels
+     * const favoriteModel = await prisma.favoriteModel.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FavoriteModels and only return the `id`
+     * const favoriteModelWithIdOnly = await prisma.favoriteModel.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FavoriteModelUpdateManyAndReturnArgs>(args: SelectSubset<T, FavoriteModelUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FavoriteModel.
+     * @param {FavoriteModelUpsertArgs} args - Arguments to update or create a FavoriteModel.
+     * @example
+     * // Update or create a FavoriteModel
+     * const favoriteModel = await prisma.favoriteModel.upsert({
+     *   create: {
+     *     // ... data to create a FavoriteModel
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FavoriteModel we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FavoriteModelUpsertArgs>(args: SelectSubset<T, FavoriteModelUpsertArgs<ExtArgs>>): Prisma__FavoriteModelClient<$Result.GetResult<Prisma.$FavoriteModelPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FavoriteModels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FavoriteModelCountArgs} args - Arguments to filter FavoriteModels to count.
+     * @example
+     * // Count the number of FavoriteModels
+     * const count = await prisma.favoriteModel.count({
+     *   where: {
+     *     // ... the filter for the FavoriteModels we want to count
+     *   }
+     * })
+    **/
+    count<T extends FavoriteModelCountArgs>(
+      args?: Subset<T, FavoriteModelCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FavoriteModelCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FavoriteModel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FavoriteModelAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FavoriteModelAggregateArgs>(args: Subset<T, FavoriteModelAggregateArgs>): Prisma.PrismaPromise<GetFavoriteModelAggregateType<T>>
+
+    /**
+     * Group by FavoriteModel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FavoriteModelGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FavoriteModelGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FavoriteModelGroupByArgs['orderBy'] }
+        : { orderBy?: FavoriteModelGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FavoriteModelGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFavoriteModelGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FavoriteModel model
+   */
+  readonly fields: FavoriteModelFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FavoriteModel.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FavoriteModelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    User<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FavoriteModel model
+   */
+  interface FavoriteModelFieldRefs {
+    readonly id: FieldRef<"FavoriteModel", 'String'>
+    readonly modelId: FieldRef<"FavoriteModel", 'String'>
+    readonly userId: FieldRef<"FavoriteModel", 'String'>
+    readonly createdAt: FieldRef<"FavoriteModel", 'DateTime'>
+    readonly updatedAt: FieldRef<"FavoriteModel", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FavoriteModel findUnique
+   */
+  export type FavoriteModelFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelInclude<ExtArgs> | null
+    /**
+     * Filter, which FavoriteModel to fetch.
+     */
+    where: FavoriteModelWhereUniqueInput
+  }
+
+  /**
+   * FavoriteModel findUniqueOrThrow
+   */
+  export type FavoriteModelFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelInclude<ExtArgs> | null
+    /**
+     * Filter, which FavoriteModel to fetch.
+     */
+    where: FavoriteModelWhereUniqueInput
+  }
+
+  /**
+   * FavoriteModel findFirst
+   */
+  export type FavoriteModelFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelInclude<ExtArgs> | null
+    /**
+     * Filter, which FavoriteModel to fetch.
+     */
+    where?: FavoriteModelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FavoriteModels to fetch.
+     */
+    orderBy?: FavoriteModelOrderByWithRelationInput | FavoriteModelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FavoriteModels.
+     */
+    cursor?: FavoriteModelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FavoriteModels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FavoriteModels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FavoriteModels.
+     */
+    distinct?: FavoriteModelScalarFieldEnum | FavoriteModelScalarFieldEnum[]
+  }
+
+  /**
+   * FavoriteModel findFirstOrThrow
+   */
+  export type FavoriteModelFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelInclude<ExtArgs> | null
+    /**
+     * Filter, which FavoriteModel to fetch.
+     */
+    where?: FavoriteModelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FavoriteModels to fetch.
+     */
+    orderBy?: FavoriteModelOrderByWithRelationInput | FavoriteModelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FavoriteModels.
+     */
+    cursor?: FavoriteModelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FavoriteModels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FavoriteModels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FavoriteModels.
+     */
+    distinct?: FavoriteModelScalarFieldEnum | FavoriteModelScalarFieldEnum[]
+  }
+
+  /**
+   * FavoriteModel findMany
+   */
+  export type FavoriteModelFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelInclude<ExtArgs> | null
+    /**
+     * Filter, which FavoriteModels to fetch.
+     */
+    where?: FavoriteModelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FavoriteModels to fetch.
+     */
+    orderBy?: FavoriteModelOrderByWithRelationInput | FavoriteModelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FavoriteModels.
+     */
+    cursor?: FavoriteModelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FavoriteModels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FavoriteModels.
+     */
+    skip?: number
+    distinct?: FavoriteModelScalarFieldEnum | FavoriteModelScalarFieldEnum[]
+  }
+
+  /**
+   * FavoriteModel create
+   */
+  export type FavoriteModelCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FavoriteModel.
+     */
+    data: XOR<FavoriteModelCreateInput, FavoriteModelUncheckedCreateInput>
+  }
+
+  /**
+   * FavoriteModel createMany
+   */
+  export type FavoriteModelCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FavoriteModels.
+     */
+    data: FavoriteModelCreateManyInput | FavoriteModelCreateManyInput[]
+  }
+
+  /**
+   * FavoriteModel createManyAndReturn
+   */
+  export type FavoriteModelCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * The data used to create many FavoriteModels.
+     */
+    data: FavoriteModelCreateManyInput | FavoriteModelCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FavoriteModel update
+   */
+  export type FavoriteModelUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FavoriteModel.
+     */
+    data: XOR<FavoriteModelUpdateInput, FavoriteModelUncheckedUpdateInput>
+    /**
+     * Choose, which FavoriteModel to update.
+     */
+    where: FavoriteModelWhereUniqueInput
+  }
+
+  /**
+   * FavoriteModel updateMany
+   */
+  export type FavoriteModelUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FavoriteModels.
+     */
+    data: XOR<FavoriteModelUpdateManyMutationInput, FavoriteModelUncheckedUpdateManyInput>
+    /**
+     * Filter which FavoriteModels to update
+     */
+    where?: FavoriteModelWhereInput
+    /**
+     * Limit how many FavoriteModels to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FavoriteModel updateManyAndReturn
+   */
+  export type FavoriteModelUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * The data used to update FavoriteModels.
+     */
+    data: XOR<FavoriteModelUpdateManyMutationInput, FavoriteModelUncheckedUpdateManyInput>
+    /**
+     * Filter which FavoriteModels to update
+     */
+    where?: FavoriteModelWhereInput
+    /**
+     * Limit how many FavoriteModels to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FavoriteModel upsert
+   */
+  export type FavoriteModelUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FavoriteModel to update in case it exists.
+     */
+    where: FavoriteModelWhereUniqueInput
+    /**
+     * In case the FavoriteModel found by the `where` argument doesn't exist, create a new FavoriteModel with this data.
+     */
+    create: XOR<FavoriteModelCreateInput, FavoriteModelUncheckedCreateInput>
+    /**
+     * In case the FavoriteModel was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FavoriteModelUpdateInput, FavoriteModelUncheckedUpdateInput>
+  }
+
+  /**
+   * FavoriteModel delete
+   */
+  export type FavoriteModelDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelInclude<ExtArgs> | null
+    /**
+     * Filter which FavoriteModel to delete.
+     */
+    where: FavoriteModelWhereUniqueInput
+  }
+
+  /**
+   * FavoriteModel deleteMany
+   */
+  export type FavoriteModelDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FavoriteModels to delete
+     */
+    where?: FavoriteModelWhereInput
+    /**
+     * Limit how many FavoriteModels to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FavoriteModel without action
+   */
+  export type FavoriteModelDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteModel
+     */
+    select?: FavoriteModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteModel
+     */
+    omit?: FavoriteModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteModelInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -4482,6 +5666,17 @@ export namespace Prisma {
   };
 
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+  export const FavoriteModelScalarFieldEnum: {
+    id: 'id',
+    modelId: 'modelId',
+    userId: 'userId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FavoriteModelScalarFieldEnum = (typeof FavoriteModelScalarFieldEnum)[keyof typeof FavoriteModelScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -4542,6 +5737,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     threads?: ThreadListRelationFilter
     messages?: MessageListRelationFilter
+    favoriteModels?: FavoriteModelListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -4554,6 +5750,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     threads?: ThreadOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
+    favoriteModels?: FavoriteModelOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -4569,6 +5766,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     threads?: ThreadListRelationFilter
     messages?: MessageListRelationFilter
+    favoriteModels?: FavoriteModelListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -4725,6 +5923,61 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
   }
 
+  export type FavoriteModelWhereInput = {
+    AND?: FavoriteModelWhereInput | FavoriteModelWhereInput[]
+    OR?: FavoriteModelWhereInput[]
+    NOT?: FavoriteModelWhereInput | FavoriteModelWhereInput[]
+    id?: StringFilter<"FavoriteModel"> | string
+    modelId?: StringFilter<"FavoriteModel"> | string
+    userId?: StringFilter<"FavoriteModel"> | string
+    createdAt?: DateTimeFilter<"FavoriteModel"> | Date | string
+    updatedAt?: DateTimeFilter<"FavoriteModel"> | Date | string
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type FavoriteModelOrderByWithRelationInput = {
+    id?: SortOrder
+    modelId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    User?: UserOrderByWithRelationInput
+  }
+
+  export type FavoriteModelWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FavoriteModelWhereInput | FavoriteModelWhereInput[]
+    OR?: FavoriteModelWhereInput[]
+    NOT?: FavoriteModelWhereInput | FavoriteModelWhereInput[]
+    modelId?: StringFilter<"FavoriteModel"> | string
+    userId?: StringFilter<"FavoriteModel"> | string
+    createdAt?: DateTimeFilter<"FavoriteModel"> | Date | string
+    updatedAt?: DateTimeFilter<"FavoriteModel"> | Date | string
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type FavoriteModelOrderByWithAggregationInput = {
+    id?: SortOrder
+    modelId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FavoriteModelCountOrderByAggregateInput
+    _max?: FavoriteModelMaxOrderByAggregateInput
+    _min?: FavoriteModelMinOrderByAggregateInput
+  }
+
+  export type FavoriteModelScalarWhereWithAggregatesInput = {
+    AND?: FavoriteModelScalarWhereWithAggregatesInput | FavoriteModelScalarWhereWithAggregatesInput[]
+    OR?: FavoriteModelScalarWhereWithAggregatesInput[]
+    NOT?: FavoriteModelScalarWhereWithAggregatesInput | FavoriteModelScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FavoriteModel"> | string
+    modelId?: StringWithAggregatesFilter<"FavoriteModel"> | string
+    userId?: StringWithAggregatesFilter<"FavoriteModel"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"FavoriteModel"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FavoriteModel"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     name: string
@@ -4735,6 +5988,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     threads?: ThreadCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    favoriteModels?: FavoriteModelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -4747,6 +6001,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     threads?: ThreadUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    favoriteModels?: FavoriteModelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -4759,6 +6014,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ThreadUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    favoriteModels?: FavoriteModelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -4771,6 +6027,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ThreadUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    favoriteModels?: FavoriteModelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -4930,6 +6187,61 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FavoriteModelCreateInput = {
+    id?: string
+    modelId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    User: UserCreateNestedOneWithoutFavoriteModelsInput
+  }
+
+  export type FavoriteModelUncheckedCreateInput = {
+    id?: string
+    modelId: string
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FavoriteModelUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    User?: UserUpdateOneRequiredWithoutFavoriteModelsNestedInput
+  }
+
+  export type FavoriteModelUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FavoriteModelCreateManyInput = {
+    id?: string
+    modelId: string
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FavoriteModelUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FavoriteModelUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -4981,6 +6293,12 @@ export namespace Prisma {
     none?: MessageWhereInput
   }
 
+  export type FavoriteModelListRelationFilter = {
+    every?: FavoriteModelWhereInput
+    some?: FavoriteModelWhereInput
+    none?: FavoriteModelWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -4991,6 +6309,10 @@ export namespace Prisma {
   }
 
   export type MessageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FavoriteModelOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -5146,6 +6468,30 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type FavoriteModelCountOrderByAggregateInput = {
+    id?: SortOrder
+    modelId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FavoriteModelMaxOrderByAggregateInput = {
+    id?: SortOrder
+    modelId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FavoriteModelMinOrderByAggregateInput = {
+    id?: SortOrder
+    modelId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type ThreadCreateNestedManyWithoutUserInput = {
     create?: XOR<ThreadCreateWithoutUserInput, ThreadUncheckedCreateWithoutUserInput> | ThreadCreateWithoutUserInput[] | ThreadUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ThreadCreateOrConnectWithoutUserInput | ThreadCreateOrConnectWithoutUserInput[]
@@ -5160,6 +6506,13 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
+  export type FavoriteModelCreateNestedManyWithoutUserInput = {
+    create?: XOR<FavoriteModelCreateWithoutUserInput, FavoriteModelUncheckedCreateWithoutUserInput> | FavoriteModelCreateWithoutUserInput[] | FavoriteModelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FavoriteModelCreateOrConnectWithoutUserInput | FavoriteModelCreateOrConnectWithoutUserInput[]
+    createMany?: FavoriteModelCreateManyUserInputEnvelope
+    connect?: FavoriteModelWhereUniqueInput | FavoriteModelWhereUniqueInput[]
+  }
+
   export type ThreadUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<ThreadCreateWithoutUserInput, ThreadUncheckedCreateWithoutUserInput> | ThreadCreateWithoutUserInput[] | ThreadUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ThreadCreateOrConnectWithoutUserInput | ThreadCreateOrConnectWithoutUserInput[]
@@ -5172,6 +6525,13 @@ export namespace Prisma {
     connectOrCreate?: MessageCreateOrConnectWithoutUserInput | MessageCreateOrConnectWithoutUserInput[]
     createMany?: MessageCreateManyUserInputEnvelope
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type FavoriteModelUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<FavoriteModelCreateWithoutUserInput, FavoriteModelUncheckedCreateWithoutUserInput> | FavoriteModelCreateWithoutUserInput[] | FavoriteModelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FavoriteModelCreateOrConnectWithoutUserInput | FavoriteModelCreateOrConnectWithoutUserInput[]
+    createMany?: FavoriteModelCreateManyUserInputEnvelope
+    connect?: FavoriteModelWhereUniqueInput | FavoriteModelWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -5214,6 +6574,20 @@ export namespace Prisma {
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
+  export type FavoriteModelUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FavoriteModelCreateWithoutUserInput, FavoriteModelUncheckedCreateWithoutUserInput> | FavoriteModelCreateWithoutUserInput[] | FavoriteModelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FavoriteModelCreateOrConnectWithoutUserInput | FavoriteModelCreateOrConnectWithoutUserInput[]
+    upsert?: FavoriteModelUpsertWithWhereUniqueWithoutUserInput | FavoriteModelUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FavoriteModelCreateManyUserInputEnvelope
+    set?: FavoriteModelWhereUniqueInput | FavoriteModelWhereUniqueInput[]
+    disconnect?: FavoriteModelWhereUniqueInput | FavoriteModelWhereUniqueInput[]
+    delete?: FavoriteModelWhereUniqueInput | FavoriteModelWhereUniqueInput[]
+    connect?: FavoriteModelWhereUniqueInput | FavoriteModelWhereUniqueInput[]
+    update?: FavoriteModelUpdateWithWhereUniqueWithoutUserInput | FavoriteModelUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FavoriteModelUpdateManyWithWhereWithoutUserInput | FavoriteModelUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FavoriteModelScalarWhereInput | FavoriteModelScalarWhereInput[]
+  }
+
   export type ThreadUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<ThreadCreateWithoutUserInput, ThreadUncheckedCreateWithoutUserInput> | ThreadCreateWithoutUserInput[] | ThreadUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ThreadCreateOrConnectWithoutUserInput | ThreadCreateOrConnectWithoutUserInput[]
@@ -5240,6 +6614,20 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutUserInput | MessageUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutUserInput | MessageUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type FavoriteModelUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FavoriteModelCreateWithoutUserInput, FavoriteModelUncheckedCreateWithoutUserInput> | FavoriteModelCreateWithoutUserInput[] | FavoriteModelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FavoriteModelCreateOrConnectWithoutUserInput | FavoriteModelCreateOrConnectWithoutUserInput[]
+    upsert?: FavoriteModelUpsertWithWhereUniqueWithoutUserInput | FavoriteModelUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FavoriteModelCreateManyUserInputEnvelope
+    set?: FavoriteModelWhereUniqueInput | FavoriteModelWhereUniqueInput[]
+    disconnect?: FavoriteModelWhereUniqueInput | FavoriteModelWhereUniqueInput[]
+    delete?: FavoriteModelWhereUniqueInput | FavoriteModelWhereUniqueInput[]
+    connect?: FavoriteModelWhereUniqueInput | FavoriteModelWhereUniqueInput[]
+    update?: FavoriteModelUpdateWithWhereUniqueWithoutUserInput | FavoriteModelUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FavoriteModelUpdateManyWithWhereWithoutUserInput | FavoriteModelUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FavoriteModelScalarWhereInput | FavoriteModelScalarWhereInput[]
   }
 
   export type MessageCreateNestedManyWithoutThreadInput = {
@@ -5324,6 +6712,20 @@ export namespace Prisma {
     upsert?: ThreadUpsertWithoutMessagesInput
     connect?: ThreadWhereUniqueInput
     update?: XOR<XOR<ThreadUpdateToOneWithWhereWithoutMessagesInput, ThreadUpdateWithoutMessagesInput>, ThreadUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type UserCreateNestedOneWithoutFavoriteModelsInput = {
+    create?: XOR<UserCreateWithoutFavoriteModelsInput, UserUncheckedCreateWithoutFavoriteModelsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFavoriteModelsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutFavoriteModelsNestedInput = {
+    create?: XOR<UserCreateWithoutFavoriteModelsInput, UserUncheckedCreateWithoutFavoriteModelsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFavoriteModelsInput
+    upsert?: UserUpsertWithoutFavoriteModelsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFavoriteModelsInput, UserUpdateWithoutFavoriteModelsInput>, UserUncheckedUpdateWithoutFavoriteModelsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -5487,6 +6889,29 @@ export namespace Prisma {
     data: MessageCreateManyUserInput | MessageCreateManyUserInput[]
   }
 
+  export type FavoriteModelCreateWithoutUserInput = {
+    id?: string
+    modelId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FavoriteModelUncheckedCreateWithoutUserInput = {
+    id?: string
+    modelId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FavoriteModelCreateOrConnectWithoutUserInput = {
+    where: FavoriteModelWhereUniqueInput
+    create: XOR<FavoriteModelCreateWithoutUserInput, FavoriteModelUncheckedCreateWithoutUserInput>
+  }
+
+  export type FavoriteModelCreateManyUserInputEnvelope = {
+    data: FavoriteModelCreateManyUserInput | FavoriteModelCreateManyUserInput[]
+  }
+
   export type ThreadUpsertWithWhereUniqueWithoutUserInput = {
     where: ThreadWhereUniqueInput
     update: XOR<ThreadUpdateWithoutUserInput, ThreadUncheckedUpdateWithoutUserInput>
@@ -5543,6 +6968,33 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Message"> | Date | string
   }
 
+  export type FavoriteModelUpsertWithWhereUniqueWithoutUserInput = {
+    where: FavoriteModelWhereUniqueInput
+    update: XOR<FavoriteModelUpdateWithoutUserInput, FavoriteModelUncheckedUpdateWithoutUserInput>
+    create: XOR<FavoriteModelCreateWithoutUserInput, FavoriteModelUncheckedCreateWithoutUserInput>
+  }
+
+  export type FavoriteModelUpdateWithWhereUniqueWithoutUserInput = {
+    where: FavoriteModelWhereUniqueInput
+    data: XOR<FavoriteModelUpdateWithoutUserInput, FavoriteModelUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FavoriteModelUpdateManyWithWhereWithoutUserInput = {
+    where: FavoriteModelScalarWhereInput
+    data: XOR<FavoriteModelUpdateManyMutationInput, FavoriteModelUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type FavoriteModelScalarWhereInput = {
+    AND?: FavoriteModelScalarWhereInput | FavoriteModelScalarWhereInput[]
+    OR?: FavoriteModelScalarWhereInput[]
+    NOT?: FavoriteModelScalarWhereInput | FavoriteModelScalarWhereInput[]
+    id?: StringFilter<"FavoriteModel"> | string
+    modelId?: StringFilter<"FavoriteModel"> | string
+    userId?: StringFilter<"FavoriteModel"> | string
+    createdAt?: DateTimeFilter<"FavoriteModel"> | Date | string
+    updatedAt?: DateTimeFilter<"FavoriteModel"> | Date | string
+  }
+
   export type MessageCreateWithoutThreadInput = {
     id?: string
     attachmentUrl?: string | null
@@ -5579,6 +7031,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     messages?: MessageCreateNestedManyWithoutUserInput
+    favoriteModels?: FavoriteModelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutThreadsInput = {
@@ -5590,6 +7043,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    favoriteModels?: FavoriteModelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutThreadsInput = {
@@ -5633,6 +7087,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: MessageUpdateManyWithoutUserNestedInput
+    favoriteModels?: FavoriteModelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutThreadsInput = {
@@ -5644,6 +7099,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    favoriteModels?: FavoriteModelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutMessagesInput = {
@@ -5655,6 +7111,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ThreadCreateNestedManyWithoutUserInput
+    favoriteModels?: FavoriteModelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessagesInput = {
@@ -5666,6 +7123,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ThreadUncheckedCreateNestedManyWithoutUserInput
+    favoriteModels?: FavoriteModelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessagesInput = {
@@ -5714,6 +7172,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ThreadUpdateManyWithoutUserNestedInput
+    favoriteModels?: FavoriteModelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -5725,6 +7184,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ThreadUncheckedUpdateManyWithoutUserNestedInput
+    favoriteModels?: FavoriteModelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ThreadUpsertWithoutMessagesInput = {
@@ -5754,6 +7214,70 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserCreateWithoutFavoriteModelsInput = {
+    id: string
+    name: string
+    email: string
+    username?: string | null
+    imageUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    threads?: ThreadCreateNestedManyWithoutUserInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutFavoriteModelsInput = {
+    id: string
+    name: string
+    email: string
+    username?: string | null
+    imageUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    threads?: ThreadUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFavoriteModelsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFavoriteModelsInput, UserUncheckedCreateWithoutFavoriteModelsInput>
+  }
+
+  export type UserUpsertWithoutFavoriteModelsInput = {
+    update: XOR<UserUpdateWithoutFavoriteModelsInput, UserUncheckedUpdateWithoutFavoriteModelsInput>
+    create: XOR<UserCreateWithoutFavoriteModelsInput, UserUncheckedCreateWithoutFavoriteModelsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFavoriteModelsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFavoriteModelsInput, UserUncheckedUpdateWithoutFavoriteModelsInput>
+  }
+
+  export type UserUpdateWithoutFavoriteModelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threads?: ThreadUpdateManyWithoutUserNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFavoriteModelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threads?: ThreadUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type ThreadCreateManyUserInput = {
     id?: string
     title: string
@@ -5766,6 +7290,13 @@ export namespace Prisma {
     threadId: string
     attachmentUrl?: string | null
     content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FavoriteModelCreateManyUserInput = {
+    id?: string
+    modelId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -5816,6 +7347,27 @@ export namespace Prisma {
     threadId?: StringFieldUpdateOperationsInput | string
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FavoriteModelUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FavoriteModelUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FavoriteModelUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

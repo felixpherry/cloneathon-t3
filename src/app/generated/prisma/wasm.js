@@ -145,6 +145,14 @@ exports.Prisma.MessageScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FavoriteModelScalarFieldEnum = {
+  id: 'id',
+  modelId: 'modelId',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -159,7 +167,8 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   User: 'User',
   Thread: 'Thread',
-  Message: 'Message'
+  Message: 'Message',
+  FavoriteModel: 'FavoriteModel'
 };
 
 /**

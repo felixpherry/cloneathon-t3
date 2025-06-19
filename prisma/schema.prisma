@@ -12,13 +12,14 @@ datasource db {
 }
 
 model User {
-  id       String    @id
-  name     String
-  email    String    @unique
-  username String?
-  imageUrl String?
-  threads  Thread[]
-  messages Message[]
+  id             String          @id
+  name           String
+  email          String          @unique
+  username       String?
+  imageUrl       String?
+  threads        Thread[]
+  messages       Message[]
+  favoriteModels FavoriteModel[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -59,4 +60,14 @@ model Message {
   updatedAt DateTime @updatedAt
 
   @@unique([id, createdAt])
+}
+
+model FavoriteModel {
+  id      String @id @default(cuid())
+  modelId String
+  User    User   @relation(fields: [userId], references: [id])
+  userId  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

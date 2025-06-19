@@ -5,6 +5,7 @@ import { Input } from './ui/input';
 import { cn } from '@/lib/utils';
 import { ArrowUp, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
+import ModelPopover from './model-popover/model-popover';
 
 interface Props {
   className: string;
@@ -42,6 +43,7 @@ export default function PromptInput({
           onChange={(e) => setPrompt(e.target.value)}
         />
         <div className='flex items-center gap-2 px-2'>
+          <ModelPopover />
           <Button className='rounded-full' size='icon' variant='outline'>
             <Paperclip className='size-4' />
           </Button>
