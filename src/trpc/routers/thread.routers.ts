@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { privateProcedure } from '../init';
+import { createTRPCRouter, privateProcedure } from '../init';
 import prisma from '@/lib/prisma';
 
-const threadRouters = {
+const threadRouters = createTRPCRouter({
   infiniteThreads: privateProcedure
     .input(
       z.object({
@@ -67,6 +67,6 @@ const threadRouters = {
         },
       });
     }),
-};
+});
 
 export default threadRouters;

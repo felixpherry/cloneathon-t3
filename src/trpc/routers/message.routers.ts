@@ -1,8 +1,8 @@
 import prisma from '@/lib/prisma';
-import { privateProcedure } from '../init';
+import { createTRPCRouter, privateProcedure } from '../init';
 import { z } from 'zod';
 
-const messageRouters = {
+const messageRouters = createTRPCRouter({
   infiniteMessages: privateProcedure
     .input(
       z.object({
@@ -93,6 +93,6 @@ const messageRouters = {
         },
       });
     }),
-};
+});
 
 export default messageRouters;

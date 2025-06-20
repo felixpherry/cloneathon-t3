@@ -1,9 +1,9 @@
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { baseProcedure, privateProcedure } from '../init';
+import { baseProcedure, createTRPCRouter, privateProcedure } from '../init';
 import { TRPCError } from '@trpc/server';
 import prisma from '@/lib/prisma';
 
-const authRouters = {
+const authRouters = createTRPCRouter({
   authCallback: baseProcedure.query(async () => {
     const { getUser } = getKindeServerSession();
     const user = await getUser();
@@ -37,6 +37,6 @@ const authRouters = {
     });
     return dbUser;
   }),
-};
+});
 
 export default authRouters;

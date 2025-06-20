@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { privateProcedure } from '../init';
+import { createTRPCRouter, privateProcedure } from '../init';
 import prisma from '@/lib/prisma';
 
 type Modality = 'text' | 'image' | 'file';
@@ -38,7 +38,7 @@ interface ModelResponse {
   data: Model[];
 }
 
-const modelRouters = {
+const modelRouters = createTRPCRouter({
   getModels: privateProcedure.query(async () => {
     const response = await fetch('https://openrouter.ai/api/v1/models');
     const models = (await response.json()) as ModelResponse;
@@ -88,6 +88,6 @@ const modelRouters = {
         });
       }
     }),
-};
+});
 
 export default modelRouters;

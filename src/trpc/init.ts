@@ -13,6 +13,7 @@ const t = initTRPC.create({
 
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
+export const mergeRouters = t.mergeRouters;
 export const baseProcedure = t.procedure;
 export const privateProcedure = t.procedure.use(async (opts) => {
   const { getUser } = getKindeServerSession();
